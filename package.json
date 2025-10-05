@@ -1,0 +1,58 @@
+{
+  "name": "payment-management",
+  "version": "1.0.0",
+  "description": "Um aplicativo inteligente de gestão de recibos e pagamentos",
+  "main": "expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "jest",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "payment",
+    "receipts",
+    "finance",
+    "management"
+  ],
+  "author": "Thiago",
+  "license": "MIT",
+  "dependencies": {
+    "expo": "~51.0.0",
+    "expo-status-bar": "~1.12.1",
+    "react": "18.2.0",
+    "react-native": "0.74.5",
+    "@expo/vector-icons": "^14.0.0",
+    "@react-navigation/native": "^6.1.0",
+    "@react-navigation/stack": "^6.3.0",
+    "@react-navigation/bottom-tabs": "^6.5.0",
+    "expo-sqlite": "~14.0.0",
+    "expo-async-storage": "~1.23.0",
+    "expo-file-system": "~17.0.0",
+    "expo-constants": "~16.0.0",
+    "react-native-paper": "^5.10.0",
+    "react-native-vector-icons": "^10.0.0",
+    "react-native-chart-kit": "^6.12.0",
+    "react-native-svg": "15.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/react": "~18.2.45",
+    "@types/react-native": "^0.72.0",
+    "eslint": "^8.0.0",
+    "eslint-config-expo": "^7.0.0",
+    "prettier": "^3.0.0",
+    "jest": "^29.0.0",
+    "@testing-library/react-native": "^12.0.0",
+    "typescript": "^5.1.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "private": true
+}
