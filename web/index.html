@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Management - Professional Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Open Graph Meta Tags for Social Sharing -->
+    <meta property="og:title" content="Payment Management Pro">
+    <meta property="og:description" content="Professional financial management solution for individuals and businesses">
+    <meta property="og:image" content="/web/logo-og.png">
+    <meta property="og:type" content="website">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Complete payment management system with advanced reporting, real-time analytics, and professional dashboard design">
+    <meta name="keywords" content="payment management, financial dashboard, business analytics, expense tracking">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2E7D32">
+    
+    <style>
+        /* Override default font */
+        :root {
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+        }
+        
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 9999;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+        
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .loading-subtext {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Demo Notice */
+        .demo-notice {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #1976D2 0%, #2196F3 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1001;
+            max-width: 300px;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-notice {
+                left: 10px;
+                right: 10px;
+                max-width: none;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="loading-text">Payment Management</div>
+        <div class="loading-subtext">Loading professional dashboard...</div>
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div class="app-container" id="appContainer" style="opacity: 0;">
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <span>Payment Management Pro</span>
+            </div>
+            
+            <div class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="Search transactions, reports..."
+                    aria-label="Search"
+                >
+            </div>
+            
+            <div class="header-actions">
+                <button class="theme-toggle focus-ring" aria-label="Toggle dark mode" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="theme-toggle focus-ring" aria-label="Notifications" id="notifications">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="nav-menu">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-tachometer-alt nav-icon"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-exchange-alt nav-icon"></i>
+                    <span>Transactions</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar nav-icon"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-tags nav-icon"></i>
+                    <span>Categories</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-file-export nav-icon"></i>
+                    <span>Export</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog nav-icon"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-grid">
+                
+                <!-- Balance Card -->
+                <div class="card balance-card">
+                    <div class="balance-label">Current Balance</div>
+                    <div class="balance-amount" id="balanceAmount">R$ 0,00</div>
+                    <div class="balance-label">Total Available</div>
+                </div>
+
+                <!-- Analytics Card -->
+                <div class="card analytics-card">
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: var(--success);">R$ 0,00</div>
+                        <div class="metric-label">Monthly Income</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: var(--error);">R$ 0,00</div>
+                        <div class="metric-label">Monthly Expenses</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: var(--primary-green);">0</div>
+                        <div class="metric-label">Transactions</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: var(--warning);">0</div>
+                        <div class="metric-label">Categories</div>
+                    </div>
+                </div>
+
+                <!-- Chart Card -->
+                <div class="card chart-card">
+                    <div class="chart-header">
+                        <h2 class="chart-title">Expense Overview</h2>
+                        <div class="chart-filters">
+                            <button class="filter-btn active">7D</button>
+                            <button class="filter-btn">1M</button>
+                            <button class="filter-btn">3M</button>
+                            <button class="filter-btn">1Y</button>
+                        </div>
+                    </div>
+                    <div id="chartContainer" style="height: 300px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+                        <div>
+                            <i class="fas fa-chart-area" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                            <div>Connect your React Native app to see live charts</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="aside-panel">
+            <div class="widget">
+                <h3 class="widget-title">Quick Actions</h3>
+                <div style="display: grid; gap: 0.75rem;">
+                    <button class="filter-btn" style="width: 100%; justify-self: stretch;">
+                        <i class="fas fa-plus" style="margin-right: 0.5rem;"></i>
+                        New Transaction
+                    </button>
+                    <button class="filter-btn" style="width: 100%; justify-self: stretch;">
+                        <i class="fas fa-file-export" style="margin-right: 0.5rem;"></i>
+                        Export CSV
+                    </button>
+                    <button class="filter-btn" style="width: 100%; justify-self: stretch;">
+                        <i class="fas fa-chart-pie" style="margin-right: 0.5rem;"></i>
+                        View Reports
+                    </button>
+                </div>
+            </div>
+
+            <div class="widget">
+                <h3 class="widget-title">Recent Activity</h3>
+                <div style="color: var(--text-secondary); font-size: var(--font-size-sm);">
+                    No recent transactions to display. Start by adding your first transaction in the mobile app.
+                </div>
+            </div>
+
+            <div class="widget">
+                <h3 class="widget-title">Business Mode</h3>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="businessModeToggle" style="transform: scale(1.2);">
+                        <span>Enable Business Features</span>
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="fab" style="opacity: 0;" aria-label="Add new transaction">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Demo Notice -->
+    <div class="demo-notice">
+        <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+        This is a web preview. Use the React Native app for full functionality.
+    </div>
+
+    <script>
+        // Loading and initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate loading time
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loadingScreen');
+                const appContainer = document.getElementById('appContainer');
+                const fab = document.getElementById('fab');
+                
+                loadingScreen.classList.add('hidden');
+                appContainer.style.opacity = '1';
+                fab.style.opacity = '1';
+                
+                // Remove loading screen after transition
+                setTimeout(() => {
+                    loadingScreen.remove();
+                }, 500);
+                
+            }, 2000);
+        });
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            body.setAttribute('data-theme', 'dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            if (newTheme === 'dark') {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+
+        // Navigation handling
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all items
+                navItems.forEach(nav => nav.classList.remove('active'));
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+            });
+        });
+
+        // Filter buttons
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Only handle chart filter buttons
+                if (this.closest('.chart-filters')) {
+                    filterBtns.forEach(b => {
+                        if (b.closest('.chart-filters')) {
+                            b.classList.remove('active');
+                        }
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', function() {
+            console.log('Search query:', this.value);
+            // Implement search logic here
+        });
+
+        // FAB click handler
+        document.getElementById('fab').addEventListener('click', function() {
+            alert('This would open the transaction form in the mobile app!');
+        });
+
+        // Business mode toggle
+        const businessToggle = document.getElementById('businessModeToggle');
+        const savedBusinessMode = localStorage.getItem('businessMode') === 'true';
+        businessToggle.checked = savedBusinessMode;
+
+        businessToggle.addEventListener('change', function() {
+            localStorage.setItem('businessMode', this.checked);
+            console.log('Business mode:', this.checked ? 'enabled' : 'disabled');
+        });
+
+        // Notifications
+        document.getElementById('notifications').addEventListener('click', function() {
+            alert('Notification center would open here!');
+        });
+
+        // Demo data animation
+        function animateBalance() {
+            const balanceElement = document.getElementById('balanceAmount');
+            let currentValue = 0;
+            const targetValue = 15750.80;
+            const increment = targetValue / 100;
+            
+            const interval = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= targetValue) {
+                    currentValue = targetValue;
+                    clearInterval(interval);
+                }
+                
+                balanceElement.textContent = `R$ ${currentValue.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })}`;
+            }, 20);
+        }
+
+        // Start balance animation after loading
+        setTimeout(animateBalance, 2500);
+
+        // Add some interactivity to metrics
+        setTimeout(() => {
+            const metrics = document.querySelectorAll('.metric-value');
+            const values = ['R$ 25.440,00', 'R$ 9.689,20', '142', '12'];
+            
+            metrics.forEach((metric, index) => {
+                if (values[index]) {
+                    setTimeout(() => {
+                        metric.textContent = values[index];
+                    }, index * 200);
+                }
+            });
+        }, 3000);
+    </script>
+</body>
+</html>

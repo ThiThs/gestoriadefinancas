@@ -1,6 +1,6 @@
 import { DefaultTheme } from 'react-native-paper';
 
-export const theme = {
+const lightTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
@@ -21,20 +21,44 @@ export const theme = {
       fontFamily: 'Roboto',
       fontWeight: 'normal',
     },
-    medium: {
+  },
+};
+
+const darkTheme = {
+  ...DefaultTheme,
+  dark: true,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#4CAF50',       // Verde principal
+    primaryContainer: '#2E7D32',
+    accent: '#81C784',        // Verde accent
+    background: '#0F0F0F',    // Fundo muito escuro
+    surface: '#1C1C1C',       // Superfície escura
+    surfaceVariant: '#2A2A2A', // Variação de superfície
+    error: '#FF5252',         // Erro vermelho claro
+    success: '#4CAF50',       // Verde sucesso
+    warning: '#FFC107',       // Amarelo aviso
+    text: '#FFFFFF',          // Texto principal branco
+    onSurface: '#FFFFFF',     // Texto em superfície
+    onSurfaceVariant: '#E0E0E0', // Texto secundário
+    onBackground: '#FFFFFF',  // Texto em fundo
+    placeholder: '#B0B0B0',   // Placeholder visível
+    disabled: '#666666',      // Elementos desabilitados
+    backdrop: 'rgba(0,0,0,0.8)', // Fundo de modais
+  },
+  roundness: 8,
+  fonts: {
+    ...DefaultTheme.fonts,
+    regular: {
       fontFamily: 'Roboto',
-      fontWeight: '500',
-    },
-    light: {
-      fontFamily: 'Roboto',
-      fontWeight: '300',
-    },
-    thin: {
-      fontFamily: 'Roboto',
-      fontWeight: '100',
+      fontWeight: 'normal',
     },
   },
 };
+
+export const getTheme = (isDark = false) => isDark ? darkTheme : lightTheme;
+
+export const theme = lightTheme; // Manter compatibilidade
 
 export const spacing = {
   xs: 4,

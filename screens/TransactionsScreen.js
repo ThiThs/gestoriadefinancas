@@ -21,10 +21,11 @@ import {
 } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'expo-image-picker';
 
 import { theme, spacing } from '../src/theme';
 
-export default function TransactionsScreen() {
+export default function TransactionsScreen({ navigation }) {
   const [transactions, setTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,17 +34,72 @@ export default function TransactionsScreen() {
     description: '',
     amount: '',
     category: 'Outros',
-    type: 'expense' // expense or income
+    type: 'expense', // expense or income
+    receiptPhoto: null,
+    // Campos empresariais
+    supplier: '',
+    costCenter: '',
+    project: '',
+    invoiceNumber: ''
   });
 
-  const categories = [
+  // Estados para controle de modo
+  const [businessMode, setBusinessMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Categorias pessoais
+  const personalCategories = [
     'Alimentação', 'Transporte', 'Lazer', 'Saúde', 
     'Educação', 'Casa', 'Roupas', 'Outros'
   ];
 
+  // Categorias empresariais
+  const businessCategories = [
+    'Operacional', 'Marketing', 'Recursos Humanos', 'Vendas',
+    'Financeiro', 'Tecnologia', 'Jurídico', 'Logística',
+    'Manutenção', 'Segurança', 'Treinamento', 'Outros'
+  ];
+
+  const categories = businessMode ? businessCategories : personalCategories;
+
   useEffect(() => {
     loadTransactions();
+    loadBusinessMode();
+    loadDarkMode();
   }, []);
+  
+  useEffect(() => {
+  // Listener para recarregar quando a tela ganhar foco
+    const unsubscribe = navigation?.addListener('focus', () => {
+      loadTransactions();
+      loadBusinessMode();
+      loadDarkMode();
+    });
+    
+    return unsubscribe;
+  }, [navigation]);
+
+  const loadBusinessMode = async () => {
+    try {
+      const savedMode = await AsyncStorage.getItem('businessMode');
+      if (savedMode !== null) {
+        setBusinessMode(JSON.parse(savedMode));
+      }
+    } catch (error) {
+      console.error('Erro ao carregar modo empresa:', error);
+    }
+  };
+
+  const loadDarkMode = async () => {
+    try {
+      const savedDarkMode = await AsyncStorage.getItem('darkMode');
+      if (savedDarkMode !== null) {
+        setDarkMode(JSON.parse(savedDarkMode));
+      }
+    } catch (error) {
+      console.error('Erro ao carregar modo escuro:', error);
+    }
+  };
 
   useEffect(() => {
     filterTransactions();
@@ -73,6 +129,67 @@ export default function TransactionsScreen() {
     }
   };
 
+  const pickReceiptImage = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (status !== 'granted') {
+        Alert.alert('Permissão Negada', 'Precisamos de permissão para acessar suas fotos.');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.7,
+      });
+
+      if (!result.canceled) {
+        setNewTransaction({...newTransaction, receiptPhoto: result.assets[0].uri});
+      }
+    } catch (error) {
+      console.error('Erro ao selecionar imagem:', error);
+      Alert.alert('Erro', 'Não foi possível selecionar a imagem');
+    }
+  };
+
+  const takeReceiptPhoto = async () => {
+    try {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      
+      if (status !== 'granted') {
+        Alert.alert('Permissão Negada', 'Precisamos de permissão para usar a câmera.');
+        return;
+      }
+
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.7,
+      });
+
+      if (!result.canceled) {
+        setNewTransaction({...newTransaction, receiptPhoto: result.assets[0].uri});
+      }
+    } catch (error) {
+      console.error('Erro ao capturar foto:', error);
+      Alert.alert('Erro', 'Não foi possível capturar a foto');
+    }
+  };
+
+  const showImagePickerOptions = () => {
+    Alert.alert(
+      'Adicionar Recibo',
+      'Como deseja adicionar a foto do recibo?',
+      [
+        { text: 'Câmera', onPress: takeReceiptPhoto },
+        { text: 'Galeria', onPress: pickReceiptImage },
+        { text: 'Cancelar', style: 'cancel' }
+      ]
+    );
+  };
+
   const saveTransaction = async () => {
     try {
       const amount = parseFloat(newTransaction.amount);
@@ -93,6 +210,7 @@ export default function TransactionsScreen() {
         category: newTransaction.category,
         type: newTransaction.type,
         date: new Date().toISOString(),
+        receiptPhoto: newTransaction.receiptPhoto,
       };
 
       const updatedTransactions = [transaction, ...transactions];
@@ -100,11 +218,20 @@ export default function TransactionsScreen() {
       
       await AsyncStorage.setItem('transactions', JSON.stringify(updatedTransactions));
       
-      // Atualizar total de gastos
+      // Atualizar totais
       const totalExpenses = updatedTransactions
         .filter(t => t.type === 'expense')
         .reduce((sum, t) => sum + t.amount, 0);
+      
+      const totalIncome = updatedTransactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + t.amount, 0);
+      
       await AsyncStorage.setItem('totalExpenses', totalExpenses.toString());
+      await AsyncStorage.setItem('totalIncome', totalIncome.toString());
+      
+      // Timestamp para forçar atualização de outras telas
+      await AsyncStorage.setItem('lastUpdateTimestamp', Date.now().toString());
       
       setShowAddModal(false);
       resetForm();
@@ -120,7 +247,13 @@ export default function TransactionsScreen() {
       description: '',
       amount: '',
       category: 'Outros',
-      type: 'expense'
+      type: 'expense',
+      receiptPhoto: null,
+      // Campos empresariais
+      supplier: '',
+      costCenter: '',
+      project: '',
+      invoiceNumber: ''
     });
   };
 
@@ -131,11 +264,20 @@ export default function TransactionsScreen() {
       
       await AsyncStorage.setItem('transactions', JSON.stringify(updatedTransactions));
       
-      // Atualizar total de gastos
+      // Atualizar totais
       const totalExpenses = updatedTransactions
         .filter(t => t.type === 'expense')
         .reduce((sum, t) => sum + t.amount, 0);
+      
+      const totalIncome = updatedTransactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + t.amount, 0);
+      
       await AsyncStorage.setItem('totalExpenses', totalExpenses.toString());
+      await AsyncStorage.setItem('totalIncome', totalIncome.toString());
+      
+      // Timestamp para forçar atualização de outras telas
+      await AsyncStorage.setItem('lastUpdateTimestamp', Date.now().toString());
       
     } catch (error) {
       console.error('Erro ao deletar transação:', error);
@@ -170,7 +312,7 @@ export default function TransactionsScreen() {
   };
 
   const renderTransaction = ({ item }) => (
-    <Card style={styles.transactionCard}>
+    <Card style={[styles.transactionCard, { backgroundColor: darkMode ? '#1F1F1F' : theme.colors.surface }]}>
       <Card.Content>
         <View style={styles.transactionHeader}>
           <View style={styles.transactionInfo}>
@@ -180,8 +322,8 @@ export default function TransactionsScreen() {
               color={theme.colors.primary} 
             />
             <View style={styles.transactionDetails}>
-              <Title style={styles.transactionTitle}>{item.description}</Title>
-              <Paragraph style={styles.transactionDate}>
+              <Title style={[styles.transactionTitle, { color: darkMode ? '#FFFFFF' : theme.colors.text }]}>{item.description}</Title>
+              <Paragraph style={[styles.transactionDate, { color: darkMode ? '#CCCCCC' : theme.colors.text }]}>
                 {formatDate(item.date)}
               </Paragraph>
             </View>
@@ -193,51 +335,59 @@ export default function TransactionsScreen() {
             ]}>
               {item.type === 'expense' ? '-' : '+'}{formatCurrency(item.amount)}
             </Text>
-            <Button
-              mode="text"
-              onPress={() => {
-                Alert.alert(
-                  'Excluir Transação',
-                  'Deseja realmente excluir esta transação?',
-                  [
-                    { text: 'Cancelar', style: 'cancel' },
-                    { 
-                      text: 'Excluir', 
-                      style: 'destructive',
-                      onPress: () => deleteTransaction(item.id)
-                    }
-                  ]
-                );
-              }}
-              compact
-            >
-              Excluir
-            </Button>
           </View>
         </View>
-        <Chip style={styles.categoryChip} compact>
-          {item.category}
-        </Chip>
+        
+        {/* Botão de Excluir separado */}
+        <View style={styles.transactionActions}>
+          <Button
+            mode="contained"
+            onPress={() => {
+              console.log('Clicou excluir para ID:', item.id);
+              if (confirm('Deseja realmente excluir esta transação?')) {
+                deleteTransaction(item.id);
+              }
+            }}
+            compact
+            buttonColor={theme.colors.error}
+            style={styles.deleteButton}
+          >
+            🗑️ Excluir
+          </Button>
+        </View>
+        <View style={styles.transactionFooter}>
+          <Chip style={styles.categoryChip} compact>
+            {item.category}
+          </Chip>
+          {item.receiptPhoto && (
+            <Chip style={styles.receiptChip} compact icon="camera">
+              Recibo
+            </Chip>
+          )}
+        </View>
       </Card.Content>
     </Card>
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
+    <View style={[styles.container, { backgroundColor: darkMode ? '#121212' : theme.colors.background }]}>
+      <View style={[styles.searchContainer, { backgroundColor: darkMode ? '#1F1F1F' : theme.colors.surface }]}>
         <Searchbar
           placeholder="Buscar transações..."
           onChangeText={setSearchQuery}
           value={searchQuery}
-          style={styles.searchBar}
+          style={[styles.searchBar, { backgroundColor: darkMode ? '#2A2A2A' : theme.colors.surface }]}
+          inputStyle={{ color: darkMode ? '#FFFFFF' : theme.colors.text }}
+          iconColor={darkMode ? '#FFFFFF' : theme.colors.text}
+          placeholderTextColor={darkMode ? '#888888' : theme.colors.placeholder}
         />
       </View>
 
       {filteredTransactions.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Ionicons name="document-text-outline" size={64} color={theme.colors.placeholder} />
-          <Title style={styles.emptyTitle}>Nenhuma transação encontrada</Title>
-          <Paragraph style={styles.emptyText}>
+          <Title style={[styles.emptyTitle, { color: darkMode ? '#FFFFFF' : theme.colors.text }]}>Nenhuma transação encontrada</Title>
+          <Paragraph style={[styles.emptyText, { color: darkMode ? '#CCCCCC' : theme.colors.text }]}>
             {searchQuery ? 'Tente buscar com outros termos' : 'Adicione sua primeira transação'}
           </Paragraph>
         </View>
@@ -261,9 +411,9 @@ export default function TransactionsScreen() {
         <Modal
           visible={showAddModal}
           onDismiss={() => setShowAddModal(false)}
-          contentContainerStyle={styles.modal}
+          contentContainerStyle={[styles.modal, { backgroundColor: darkMode ? '#1F1F1F' : theme.colors.surface }]}
         >
-          <Title>Nova Transação</Title>
+          <Title style={{ color: darkMode ? '#FFFFFF' : theme.colors.text }}>Nova Transação</Title>
           
           <TextInput
             label="Descrição"
@@ -271,6 +421,7 @@ export default function TransactionsScreen() {
             value={newTransaction.description}
             onChangeText={(text) => setNewTransaction({...newTransaction, description: text})}
             style={styles.input}
+            theme={{ colors: { text: darkMode ? '#FFFFFF' : theme.colors.text, placeholder: darkMode ? '#888888' : theme.colors.placeholder, outline: darkMode ? '#666666' : theme.colors.outline } }}
           />
           
           <TextInput
@@ -281,10 +432,42 @@ export default function TransactionsScreen() {
             onChangeText={(text) => setNewTransaction({...newTransaction, amount: text})}
             style={styles.input}
             left={<TextInput.Icon icon="currency-brl" />}
+            theme={{ colors: { text: darkMode ? '#FFFFFF' : theme.colors.text, placeholder: darkMode ? '#888888' : theme.colors.placeholder, outline: darkMode ? '#666666' : theme.colors.outline } }}
           />
 
+          {/* Seção de Recibo */}
+          <View style={styles.receiptContainer}>
+            <Paragraph style={{ color: darkMode ? '#FFFFFF' : theme.colors.text }}>Recibo (Opcional):</Paragraph>
+            <View style={styles.receiptActions}>
+              <Button
+                mode="outlined"
+                onPress={showImagePickerOptions}
+                style={styles.receiptButton}
+                icon="camera"
+              >
+                {newTransaction.receiptPhoto ? 'Alterar Foto' : 'Adicionar Foto'}
+              </Button>
+              {newTransaction.receiptPhoto && (
+                <Button
+                  mode="text"
+                  onPress={() => setNewTransaction({...newTransaction, receiptPhoto: null})}
+                  style={styles.receiptButton}
+                  textColor={theme.colors.error}
+                  buttonColor={darkMode ? 'transparent' : undefined}
+                >
+                  Remover
+                </Button>
+              )}
+            </View>
+            {newTransaction.receiptPhoto && (
+              <View style={styles.receiptPreview}>
+                <Text style={[styles.receiptPreviewText, { color: darkMode ? '#90CAF9' : theme.colors.primary }]}>✓ Foto do recibo adicionada</Text>
+              </View>
+            )}
+          </View>
+
           <View style={styles.categoryContainer}>
-            <Paragraph>Categoria:</Paragraph>
+            <Paragraph style={{ color: darkMode ? '#FFFFFF' : theme.colors.text }}>Categoria:</Paragraph>
             <View style={styles.categoryChips}>
               {categories.map((category) => (
                 <Chip
@@ -300,7 +483,7 @@ export default function TransactionsScreen() {
           </View>
 
           <View style={styles.typeContainer}>
-            <Paragraph>Tipo:</Paragraph>
+            <Paragraph style={{ color: darkMode ? '#FFFFFF' : theme.colors.text }}>Tipo:</Paragraph>
             <View style={styles.typeButtons}>
               <Button
                 mode={newTransaction.type === 'expense' ? 'contained' : 'outlined'}
@@ -321,6 +504,55 @@ export default function TransactionsScreen() {
             </View>
           </View>
 
+          {/* Campos Empresariais */}
+          {businessMode && (
+            <View style={styles.businessFieldsContainer}>
+              <Text style={[styles.businessFieldsTitle, { color: darkMode ? '#FFFFFF' : theme.colors.text }]}>Informações Empresariais (Opcionais)</Text>
+              
+              <TextInput
+                label="Fornecedor"
+                mode="outlined"
+                value={newTransaction.supplier}
+                onChangeText={(text) => setNewTransaction({...newTransaction, supplier: text})}
+                style={styles.input}
+                placeholder="Nome do fornecedor"
+                theme={{ colors: { text: darkMode ? '#FFFFFF' : theme.colors.text, placeholder: darkMode ? '#888888' : theme.colors.placeholder, outline: darkMode ? '#666666' : theme.colors.outline } }}
+              />
+              
+              <View style={styles.businessFieldsRow}>
+                <TextInput
+                  label="Centro de Custo"
+                  mode="outlined"
+                  value={newTransaction.costCenter}
+                  onChangeText={(text) => setNewTransaction({...newTransaction, costCenter: text})}
+                  style={[styles.input, styles.halfInput]}
+                  placeholder="Ex: ADM, VEN"
+                  theme={{ colors: { text: darkMode ? '#FFFFFF' : theme.colors.text, placeholder: darkMode ? '#888888' : theme.colors.placeholder, outline: darkMode ? '#666666' : theme.colors.outline } }}
+                />
+                
+                <TextInput
+                  label="Projeto"
+                  mode="outlined"
+                  value={newTransaction.project}
+                  onChangeText={(text) => setNewTransaction({...newTransaction, project: text})}
+                  style={[styles.input, styles.halfInput]}
+                  placeholder="Nome do projeto"
+                  theme={{ colors: { text: darkMode ? '#FFFFFF' : theme.colors.text, placeholder: darkMode ? '#888888' : theme.colors.placeholder, outline: darkMode ? '#666666' : theme.colors.outline } }}
+                />
+              </View>
+              
+              <TextInput
+                label="Número da Nota Fiscal"
+                mode="outlined"
+                value={newTransaction.invoiceNumber}
+                onChangeText={(text) => setNewTransaction({...newTransaction, invoiceNumber: text})}
+                style={styles.input}
+                placeholder="Ex: 12345"
+                theme={{ colors: { text: darkMode ? '#FFFFFF' : theme.colors.text, placeholder: darkMode ? '#888888' : theme.colors.placeholder, outline: darkMode ? '#666666' : theme.colors.outline } }}
+              />
+            </View>
+          )}
+
           <View style={styles.modalButtons}>
             <Button
               mode="text"
@@ -329,6 +561,7 @@ export default function TransactionsScreen() {
                 resetForm();
               }}
               style={styles.modalButton}
+              textColor={darkMode ? '#FFFFFF' : theme.colors.primary}
             >
               Cancelar
             </Button>
@@ -336,6 +569,7 @@ export default function TransactionsScreen() {
               mode="contained"
               onPress={saveTransaction}
               style={styles.modalButton}
+              buttonColor={darkMode ? '#BB86FC' : theme.colors.primary}
             >
               Salvar
             </Button>
@@ -390,7 +624,7 @@ const styles = StyleSheet.create({
     color: theme.colors.placeholder,
   },
   transactionAmount: {
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   amountText: {
     fontSize: 16,
@@ -459,5 +693,65 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     marginLeft: spacing.md,
+  },
+  // Estilos para recibos
+  receiptContainer: {
+    marginVertical: spacing.md,
+  },
+  receiptActions: {
+    flexDirection: 'row',
+    marginTop: spacing.sm,
+  },
+  receiptButton: {
+    marginRight: spacing.sm,
+  },
+  receiptPreview: {
+    backgroundColor: theme.colors.success + '20',
+    padding: spacing.sm,
+    borderRadius: theme.roundness,
+    marginTop: spacing.sm,
+  },
+  receiptPreviewText: {
+    color: theme.colors.success,
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  transactionFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  receiptChip: {
+    backgroundColor: theme.colors.primary + '20',
+  },
+  // Estilos para campos empresariais
+  businessFieldsContainer: {
+    marginVertical: spacing.lg,
+    padding: spacing.md,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.roundness,
+    borderWidth: 1,
+    borderColor: theme.colors.primary + '30',
+  },
+  businessFieldsTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: theme.colors.primary,
+    marginBottom: spacing.md,
+  },
+  businessFieldsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  halfInput: {
+    flex: 0.48,
+  },
+  transactionActions: {
+    marginTop: spacing.sm,
+    alignItems: 'flex-end',
+  },
+  deleteButton: {
+    marginTop: spacing.xs,
+    borderColor: theme.colors.error + '30',
   },
 });
