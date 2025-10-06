@@ -173,7 +173,11 @@ function updateHomeScreenChart() {
     if (totalExpenses === 0) {
         chartContent.innerHTML = `
             <div class="chart-subtitle">Distribuição de Gastos:</div>
-            <div class="no-data-text">Nenhum gasto encontrado. Adicione algumas transações para ver o gráfico.</div>
+            <div style="text-align: center; padding: 40px 20px; color: #9E9E9E;">
+                <div style="font-size: 48px; margin-bottom: 16px;">📈</div>
+                <h3 style="margin-bottom: 8px; color: inherit;">Aguardando Transações</h3>
+                <p style="margin: 0; line-height: 1.4;">Adicione alguns gastos para ver como estão distribuídos por categoria.</p>
+            </div>
         `;
         return;
     }

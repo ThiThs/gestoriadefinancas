@@ -1113,43 +1113,7 @@
                     </div>
                     
                     <div id="chart-content">
-                        <div class="chart-subtitle">Distribuição de Gastos:</div>
-                        
-                        <div class="category-row">
-                            <div class="category-color" style="background-color: #FF6B6B;"></div>
-                            <div class="category-name">Alimentação</div>
-                            <div class="category-right">
-                                <div class="category-percentage">45.2%</div>
-                                <div class="category-value">R$ 565,00</div>
-                            </div>
-                        </div>
-
-                        <div class="category-row">
-                            <div class="category-color" style="background-color: #4ECDC4;"></div>
-                            <div class="category-name">Transporte</div>
-                            <div class="category-right">
-                                <div class="category-percentage">28.8%</div>
-                                <div class="category-value">R$ 360,00</div>
-                            </div>
-                        </div>
-
-                        <div class="category-row">
-                            <div class="category-color" style="background-color: #45B7D1;"></div>
-                            <div class="category-name">Entretenimento</div>
-                            <div class="category-right">
-                                <div class="category-percentage">20.0%</div>
-                                <div class="category-value">R$ 250,00</div>
-                            </div>
-                        </div>
-
-                        <div class="category-row">
-                            <div class="category-color" style="background-color: #96CEB4;"></div>
-                            <div class="category-name">Outros</div>
-                            <div class="category-right">
-                                <div class="category-percentage">6.0%</div>
-                                <div class="category-value">R$ 75,00</div>
-                            </div>
-                        </div>
+                        <!-- Chart content will be loaded dynamically -->
                     </div>
                 </div>
             </div>
@@ -1991,6 +1955,11 @@
         function initializeApp() {
             loadTheme();
             loadSavedData();
+            
+            // Initialize home screen chart (empty state)
+            if (typeof updateHomeScreenChart === 'function') {
+                updateHomeScreenChart();
+            }
             
             // Add click event listeners to close modals when clicking overlay
             document.querySelectorAll('.modal-overlay').forEach(overlay => {
