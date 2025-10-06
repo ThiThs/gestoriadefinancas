@@ -43,15 +43,9 @@ const categoryIcons = {
 
 function loadTransactions() {
     const saved = localStorage.getItem('transactions');
-    const isDataCleared = localStorage.getItem('dataCleared');
     
-    // Se os dados foram limpos intencionalmente pelo usuário, não carregar dados de exemplo
-    if (isDataCleared === 'true') {
-        transactions = [];
-    } else {
-        // Se nunca salvou nada e nunca limpou, carregar dados de exemplo na primeira vez
-        transactions = saved ? JSON.parse(saved) : getSampleTransactions();
-    }
+    // Sempre iniciar vazio se não há dados salvos
+    transactions = saved ? JSON.parse(saved) : [];
     
     filteredTransactions = [...transactions];
     renderTransactions();
@@ -59,70 +53,7 @@ function loadTransactions() {
     updateHomeScreenChart();
 }
 
-function getSampleTransactions() {
-    return [
-        {
-            id: '1',
-            description: 'Salário',
-            amount: 5200,
-            category: 'Receita',
-            type: 'income',
-            date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-            supplier: businessMode ? 'Empresa ABC' : '',
-            costCenter: businessMode ? 'RH' : '',
-            project: businessMode ? 'Folha de Pagamento' : '',
-            invoiceNumber: ''
-        },
-        {
-            id: '2',
-            description: 'Aluguel',
-            amount: 1200,
-            category: businessMode ? 'Operacional' : 'Casa',
-            type: 'expense',
-            date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
-            supplier: businessMode ? 'Imobiliária XYZ' : '',
-            costCenter: businessMode ? 'Administração' : '',
-            project: '',
-            invoiceNumber: businessMode ? 'NF-001234' : ''
-        },
-        {
-            id: '3',
-            description: 'Freelance',
-            amount: 800,
-            category: 'Receita Extra',
-            type: 'income',
-            date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
-            supplier: businessMode ? 'Cliente DEF' : '',
-            costCenter: '',
-            project: businessMode ? 'Projeto Web' : '',
-            invoiceNumber: ''
-        },
-        {
-            id: '4',
-            description: 'Restaurante',
-            amount: 85,
-            category: 'Alimentação',
-            type: 'expense',
-            date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-            supplier: businessMode ? 'Restaurante GHI' : '',
-            costCenter: '',
-            project: '',
-            invoiceNumber: ''
-        },
-        {
-            id: '5',
-            description: 'Combustível',
-            amount: 150,
-            category: 'Transporte',
-            type: 'expense',
-            date: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000).toISOString(),
-            supplier: businessMode ? 'Posto JKL' : '',
-            costCenter: businessMode ? 'Operação' : '',
-            project: '',
-            invoiceNumber: businessMode ? 'NF-005678' : ''
-        }
-    ];
-}
+// Função removida - app agora inicia sempre vazio
 
 function renderTransactions() {
     const listElement = document.getElementById('transactions-list');
@@ -190,10 +121,6 @@ function addTransaction(transactionData) {
     };
     
     transactions.unshift(newTransaction);
-    
-    // Remove a flag de dados limpos quando o usuário adiciona nova transação
-    localStorage.removeItem('dataCleared');
-    
     saveTransactions();
     loadTransactions();
     showToast(`✅ Transação "${newTransaction.description}" adicionada!`);
@@ -565,7 +492,11 @@ function updateCategoryChart(data) {
     
     if (totalExpenses === 0) {
         document.getElementById('category-chart').innerHTML = `
-            <div class="no-data-text">Nenhum gasto encontrado para o período selecionado.</div>
+            <div style="text-align: center; padding: 40px; color: #9E9E9E;">
+                <div style="font-size: 48px; margin-bottom: 16px;">🍰</div>
+                <h3 style="margin-bottom: 8px; color: inherit;">Gastos por Categoria</h3>
+                <p style="margin: 0;">Adicione alguns gastos para ver como seus recursos estão sendo distribuídos por categoria.</p>
+            </div>
         `;
         return;
     }
@@ -593,6 +524,18 @@ function updateCategoryChart(data) {
 }
 
 function updateMonthlyTrend() {
+    // Se não há transações, mostrar estado vazio
+    if (transactions.length === 0) {
+        document.getElementById('monthly-trend').innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #9E9E9E;">
+                <div style="font-size: 48px; margin-bottom: 16px;">📈</div>
+                <h3 style="margin-bottom: 8px; color: inherit;">Tendência Mensal</h3>
+                <p style="margin: 0;">Adicione transações para ver a evolução dos seus gastos e receitas ao longo dos meses.</p>
+            </div>
+        `;
+        return;
+    }
+    
     const monthlyData = {};
     const now = new Date();
     
@@ -659,6 +602,18 @@ function updateMonthlyTrend() {
 }
 
 function updateAdvancedAnalysis(data) {
+    // Se não há dados, mostrar estado vazio
+    if (data.length === 0) {
+        document.getElementById('advanced-analysis').innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #9E9E9E;">
+                <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
+                <h3 style="margin-bottom: 8px; color: inherit;">Aguardando Dados</h3>
+                <p style="margin: 0;">Adicione algumas transações para ver análises inteligentes e recomendações personalizadas.</p>
+            </div>
+        `;
+        return;
+    }
+    
     const analysis = getAdvancedAnalysis(data);
     const insights = getTrendInsights();
     const recommendations = getPersonalizedRecommendations(data);
@@ -780,6 +735,18 @@ function getPersonalizedRecommendations(data) {
 }
 
 function updateFinancialScore(data) {
+    // Se não há dados, mostrar estado vazio
+    if (data.length === 0) {
+        document.getElementById('financial-score').innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #9E9E9E;">
+                <div style="font-size: 48px; margin-bottom: 16px;">🎯</div>
+                <h3 style="margin-bottom: 8px; color: inherit;">Score Financeiro</h3>
+                <p style="margin: 0;">Adicione receitas e gastos para calcular seu score financeiro e receber avaliação personalizada.</p>
+            </div>
+        `;
+        return;
+    }
+    
     let score = 100;
     const totalIncome = data.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const totalExpenses = data.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);

@@ -1458,8 +1458,8 @@
 
     <script>
         let isDarkMode = false;
-        let monthlyIncome = 6500;
-        let totalExpenses = 1250;
+        let monthlyIncome = 0;
+        let totalExpenses = 0;
         let notificationsEnabled = true;
         let businessMode = false;
         let selectedCurrency = 'BRL';
@@ -1606,9 +1606,6 @@
                     keysToRemove.forEach(key => {
                         localStorage.removeItem(key);
                     });
-                    
-                    // Mark that data has been intentionally cleared
-                    localStorage.setItem('dataCleared', 'true');
                     
                     // Reset global variables
                     monthlyIncome = 0;
