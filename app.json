@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Payment Management",
+    "slug": "payment-management",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "platforms": ["ios", "android", "web"],
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
