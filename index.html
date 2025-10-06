@@ -542,6 +542,295 @@
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
+
+        /* Settings Screen Styles */
+        .app-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .app-icon {
+            font-size: 48px;
+            margin-right: 16px;
+        }
+
+        .app-details {
+            flex: 1;
+        }
+
+        .app-title {
+            margin: 0 0 4px 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #212121;
+        }
+
+        body.dark-mode .app-title {
+            color: #FFFFFF;
+        }
+
+        .app-version {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            color: #9E9E9E;
+        }
+
+        body.dark-mode .app-version {
+            color: #B0B0B0;
+        }
+
+        .app-description {
+            margin: 0;
+            font-size: 14px;
+            color: #9E9E9E;
+        }
+
+        body.dark-mode .app-description {
+            color: #B0B0B0;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 16px 0;
+            color: #212121;
+        }
+
+        body.dark-mode .card-title {
+            color: #FFFFFF;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+        }
+
+        .settings-item.clickable {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .settings-item.clickable:hover {
+            background-color: rgba(46, 125, 50, 0.05);
+            margin: 0 -16px;
+            padding: 16px;
+            border-radius: 4px;
+        }
+
+        body.dark-mode .settings-item.clickable:hover {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .settings-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .settings-icon {
+            font-size: 24px;
+            margin-right: 16px;
+            width: 32px;
+            text-align: center;
+        }
+
+        .settings-info {
+            flex: 1;
+        }
+
+        .settings-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #212121;
+        }
+
+        body.dark-mode .settings-title {
+            color: #FFFFFF;
+        }
+
+        .settings-title.danger-text {
+            color: #D32F2F;
+        }
+
+        .settings-description {
+            font-size: 14px;
+            color: #9E9E9E;
+        }
+
+        body.dark-mode .settings-description {
+            color: #B0B0B0;
+        }
+
+        .settings-divider {
+            height: 1px;
+            background-color: #F5F5F5;
+            margin: 0 -24px;
+        }
+
+        body.dark-mode .settings-divider {
+            background-color: #2A2A2A;
+        }
+
+        .chevron {
+            font-size: 20px;
+            color: #9E9E9E;
+            transform: rotate(0deg);
+        }
+
+        body.dark-mode .chevron {
+            color: #B0B0B0;
+        }
+
+        /* Switch Styles */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #CCC;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2E7D32;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* About Text */
+        .about-text {
+            margin-bottom: 16px;
+            line-height: 1.5;
+            color: #9E9E9E;
+            font-size: 14px;
+        }
+
+        body.dark-mode .about-text {
+            color: #B0B0B0;
+        }
+
+        .about-text:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Settings Footer */
+        .settings-footer {
+            text-align: center;
+            padding: 24px 0;
+            margin-top: 16px;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: #9E9E9E;
+            margin: 4px 0;
+        }
+
+        body.dark-mode .footer-text {
+            color: #B0B0B0;
+        }
+
+        /* Currency Modal */
+        .currency-modal {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .currency-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            cursor: pointer;
+            border-bottom: 1px solid #F5F5F5;
+            transition: background-color 0.2s ease;
+        }
+
+        body.dark-mode .currency-item {
+            border-bottom: 1px solid #2A2A2A;
+        }
+
+        .currency-item:hover {
+            background-color: rgba(46, 125, 50, 0.05);
+            margin: 0 -24px;
+            padding: 16px 24px;
+        }
+
+        body.dark-mode .currency-item:hover {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .currency-item.selected {
+            background-color: rgba(46, 125, 50, 0.1);
+            margin: 0 -24px;
+            padding: 16px 24px;
+        }
+
+        body.dark-mode .currency-item.selected {
+            background-color: rgba(76, 175, 80, 0.15);
+        }
+
+        .currency-info {
+            flex: 1;
+            margin-left: 16px;
+        }
+
+        .currency-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #212121;
+        }
+
+        body.dark-mode .currency-name {
+            color: #FFFFFF;
+        }
+
+        .currency-code {
+            font-size: 14px;
+            color: #9E9E9E;
+        }
+
+        body.dark-mode .currency-code {
+            color: #B0B0B0;
+        }
+
+        .currency-check {
+            color: #2E7D32;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -668,19 +957,177 @@
 
             <!-- Settings Screen -->
             <div id="settings-screen" class="screen">
+                <!-- App Info Card -->
                 <div class="card fade-in">
-                    <h2>⚙️ Configurações</h2>
-                    <p>Funcionalidade em desenvolvimento...</p>
-                    <p>Em breve você poderá configurar:</p>
-                    <ul style="margin: 16px 0; padding-left: 20px;">
-                        <li>Modo escuro/claro</li>
-                        <li>Moeda padrão</li>
-                        <li>Backup e restauração de dados</li>
-                        <li>Notificações e lembretes</li>
-                    </ul>
-                    <button class="edit-button" onclick="toggleTheme()" style="margin-top: 16px;">
-                        🌓 Alternar Tema
-                    </button>
+                    <div class="app-info">
+                        <span class="app-icon">💰</span>
+                        <div class="app-details">
+                            <h2 class="app-title">Payment Management</h2>
+                            <p class="app-version">Versão 1.0.0</p>
+                            <p class="app-description">Gestão inteligente de recibos e pagamentos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configurações Gerais -->
+                <div class="card fade-in">
+                    <h3 class="card-title">Configurações</h3>
+                    
+                    <div class="settings-item">
+                        <div class="settings-left">
+                            <span class="settings-icon">🔔</span>
+                            <div class="settings-info">
+                                <div class="settings-title">Notificações</div>
+                                <div class="settings-description">Receba lembretes sobre seus gastos</div>
+                            </div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="notifications-toggle" checked onchange="toggleNotifications()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <div class="settings-item">
+                        <div class="settings-left">
+                            <span class="settings-icon">🌙</span>
+                            <div class="settings-info">
+                                <div class="settings-title">Modo Escuro</div>
+                                <div class="settings-description">Alterar tema da interface</div>
+                            </div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="darkmode-toggle" onchange="toggleTheme()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <div class="settings-item">
+                        <div class="settings-left">
+                            <span class="settings-icon">🏢</span>
+                            <div class="settings-info">
+                                <div class="settings-title">Modo Empresa</div>
+                                <div class="settings-description" id="business-mode-desc">Ativar funcionalidades para empresas e negócios</div>
+                            </div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="business-toggle" onchange="toggleBusinessMode()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <div class="settings-item clickable" onclick="openCurrencyModal()">
+                        <div class="settings-left">
+                            <span class="settings-icon">💰</span>
+                            <div class="settings-info">
+                                <div class="settings-title">Moeda</div>
+                                <div class="settings-description" id="currency-desc">Real Brasileiro (R$)</div>
+                            </div>
+                        </div>
+                        <span class="chevron">›</span>
+                    </div>
+                </div>
+
+                <!-- Dados -->
+                <div class="card fade-in">
+                    <h3 class="card-title">Dados</h3>
+                    
+                    <div class="settings-item clickable" onclick="exportData()">
+                        <div class="settings-left">
+                            <span class="settings-icon">📥</span>
+                            <div class="settings-info">
+                                <div class="settings-title">Exportar Dados</div>
+                                <div class="settings-description" id="export-desc">Fazer backup das suas informações</div>
+                            </div>
+                        </div>
+                        <span class="chevron">›</span>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <div class="settings-item clickable" onclick="importData()">
+                        <div class="settings-left">
+                            <span class="settings-icon">📤</span>
+                            <div class="settings-info">
+                                <div class="settings-title">Importar Dados</div>
+                                <div class="settings-description">Restaurar backup anterior</div>
+                            </div>
+                        </div>
+                        <span class="chevron">›</span>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <div class="settings-item clickable danger" onclick="clearAllData()">
+                        <div class="settings-left">
+                            <span class="settings-icon">🗑️</span>
+                            <div class="settings-info">
+                                <div class="settings-title danger-text">Limpar Todos os Dados</div>
+                                <div class="settings-description">Apagar todas as transações</div>
+                            </div>
+                        </div>
+                        <span class="chevron">›</span>
+                    </div>
+                </div>
+
+                <!-- Suporte -->
+                <div class="card fade-in">
+                    <h3 class="card-title">Suporte</h3>
+                    
+                    <div class="settings-item clickable" onclick="openHelp()">
+                        <div class="settings-left">
+                            <span class="settings-icon">❓</span>
+                            <div class="settings-info">
+                                <div class="settings-title">Central de Ajuda</div>
+                                <div class="settings-description">Perguntas frequentes e tutoriais</div>
+                            </div>
+                        </div>
+                        <span class="chevron">›</span>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <div class="settings-item clickable" onclick="reportBug()">
+                        <div class="settings-left">
+                            <span class="settings-icon">🐛</span>
+                            <div class="settings-info">
+                                <div class="settings-title">Reportar Problema</div>
+                                <div class="settings-description">Envie feedback ou relate bugs</div>
+                            </div>
+                        </div>
+                        <span class="chevron">›</span>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <div class="settings-item clickable" onclick="rateApp()">
+                        <div class="settings-left">
+                            <span class="settings-icon">⭐</span>
+                            <div class="settings-info">
+                                <div class="settings-title">Avalie o App</div>
+                                <div class="settings-description">Deixe sua avaliação na loja</div>
+                            </div>
+                        </div>
+                        <span class="chevron">›</span>
+                    </div>
+                </div>
+
+                <!-- Sobre -->
+                <div class="card fade-in">
+                    <h3 class="card-title">Sobre</h3>
+                    <p class="about-text">Payment Management é um aplicativo desenvolvido para facilitar o controle de gastos pessoais de forma simples e intuitiva.</p>
+                    <p class="about-text">Desenvolvido com tecnologias modernas e focado na privacidade, todos os seus dados são armazenados localmente no seu dispositivo.</p>
+                </div>
+
+                <!-- Footer -->
+                <div class="settings-footer">
+                    <p class="footer-text">Payment Management v1.0.0</p>
+                    <p class="footer-text">© 2025 Thiago</p>
                 </div>
             </div>
         </div>
@@ -735,19 +1182,215 @@
         </div>
     </div>
 
+    <!-- Currency Modal -->
+    <div class="modal-overlay" id="currency-modal">
+        <div class="modal currency-modal">
+            <div class="modal-title">Selecionar Moeda</div>
+            
+            <div class="currency-item" onclick="selectCurrency('BRL')" id="currency-BRL">
+                <span class="settings-icon">💰</span>
+                <div class="currency-info">
+                    <div class="currency-name">Real Brasileiro</div>
+                    <div class="currency-code">BRL - R$</div>
+                </div>
+                <span class="currency-check" style="display: none;">✓</span>
+            </div>
+            
+            <div class="currency-item" onclick="selectCurrency('USD')" id="currency-USD">
+                <span class="settings-icon">💰</span>
+                <div class="currency-info">
+                    <div class="currency-name">Dólar Americano</div>
+                    <div class="currency-code">USD - $</div>
+                </div>
+                <span class="currency-check" style="display: none;">✓</span>
+            </div>
+            
+            <div class="currency-item" onclick="selectCurrency('EUR')" id="currency-EUR">
+                <span class="settings-icon">💰</span>
+                <div class="currency-info">
+                    <div class="currency-name">Euro</div>
+                    <div class="currency-code">EUR - €</div>
+                </div>
+                <span class="currency-check" style="display: none;">✓</span>
+            </div>
+        </div>
+    </div>
+
     <script>
         let isDarkMode = false;
         let monthlyIncome = 6500;
         let totalExpenses = 1250;
+        let notificationsEnabled = true;
+        let businessMode = false;
+        let selectedCurrency = 'BRL';
+        
+        const currencies = {
+            'BRL': { name: 'Real Brasileiro', symbol: 'R$' },
+            'USD': { name: 'Dólar Americano', symbol: '$' },
+            'EUR': { name: 'Euro', symbol: '€' }
+        };
 
         // Theme Toggle
         function toggleTheme() {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark-mode', isDarkMode);
+            document.getElementById('darkmode-toggle').checked = isDarkMode;
             localStorage.setItem('darkMode', isDarkMode);
             
             // Show feedback
             showToast(isDarkMode ? '🌙 Tema escuro ativado' : '☀️ Tema claro ativado');
+        }
+
+        // Settings Functions
+        function toggleNotifications() {
+            notificationsEnabled = !notificationsEnabled;
+            localStorage.setItem('notificationsEnabled', notificationsEnabled);
+            showToast(notificationsEnabled ? '🔔 Notificações ativadas' : '🔕 Notificações desativadas');
+        }
+
+        function toggleBusinessMode() {
+            businessMode = !businessMode;
+            localStorage.setItem('businessMode', businessMode);
+            
+            // Update UI
+            const desc = document.getElementById('business-mode-desc');
+            const exportDesc = document.getElementById('export-desc');
+            
+            if (businessMode) {
+                desc.textContent = 'Categorias e funcionalidades empresariais ativas';
+                exportDesc.textContent = 'Gerar planilha CSV para contador/auditoria';
+                showToast('🏢 Modo Empresa ativado! Acesso a funcionalidades empresariais.');
+            } else {
+                desc.textContent = 'Ativar funcionalidades para empresas e negócios';
+                exportDesc.textContent = 'Fazer backup das suas informações';
+                showToast('👤 Modo Pessoal ativado! Categorias simplificadas.');
+            }
+        }
+
+        // Currency Modal
+        function openCurrencyModal() {
+            document.getElementById('currency-modal').classList.add('active');
+            updateCurrencySelection();
+        }
+
+        function closeCurrencyModal() {
+            document.getElementById('currency-modal').classList.remove('active');
+        }
+
+        function selectCurrency(currencyCode) {
+            selectedCurrency = currencyCode;
+            localStorage.setItem('selectedCurrency', selectedCurrency);
+            
+            // Update display
+            const currency = currencies[currencyCode];
+            document.getElementById('currency-desc').textContent = `${currency.name} (${currency.symbol})`;
+            
+            updateCurrencySelection();
+            closeCurrencyModal();
+            showToast(`💰 Moeda alterada para ${currency.name}`);
+        }
+
+        function updateCurrencySelection() {
+            // Remove all selections
+            document.querySelectorAll('.currency-item').forEach(item => {
+                item.classList.remove('selected');
+                item.querySelector('.currency-check').style.display = 'none';
+            });
+            
+            // Add selection to current currency
+            const selectedItem = document.getElementById(`currency-${selectedCurrency}`);
+            if (selectedItem) {
+                selectedItem.classList.add('selected');
+                selectedItem.querySelector('.currency-check').style.display = 'inline';
+            }
+        }
+
+        // Data Functions
+        function exportData() {
+            try {
+                // Simulate transaction data
+                const sampleTransactions = [
+                    { date: '2024-11-15', description: 'Salário', amount: 5200, category: 'Receita', type: 'income', supplier: 'Empresa ABC', costCenter: 'RH', project: 'Folha de Pagamento', invoiceNumber: '' },
+                    { date: '2024-11-10', description: 'Aluguel', amount: 1200, category: 'Habitação', type: 'expense', supplier: 'Imobiliária XYZ', costCenter: 'Administração', project: '', invoiceNumber: 'NF-001234' },
+                    { date: '2024-11-08', description: 'Freelance', amount: 800, category: 'Receita Extra', type: 'income', supplier: 'Cliente DEF', costCenter: '', project: 'Projeto Web', invoiceNumber: '' },
+                    { date: '2024-11-05', description: 'Restaurante', amount: 85, category: 'Alimentação', type: 'expense', supplier: 'Restaurante GHI', costCenter: '', project: '', invoiceNumber: '' },
+                    { date: '2024-11-03', description: 'Combustível', amount: 150, category: 'Transporte', type: 'expense', supplier: 'Posto JKL', costCenter: 'Operação', project: '', invoiceNumber: 'NF-005678' }
+                ];
+                
+                // Generate CSV
+                let csvContent = businessMode 
+                    ? "Data,Descrição,Valor,Categoria,Tipo,Fornecedor,Centro de Custo,Projeto,Nota Fiscal\n"
+                    : "Data,Descrição,Valor,Categoria,Tipo\n";
+                
+                sampleTransactions.forEach(transaction => {
+                    const date = new Date(transaction.date).toLocaleDateString('pt-BR');
+                    const currency = currencies[selectedCurrency];
+                    const amount = transaction.amount.toFixed(2).replace('.', ',');
+                    const type = transaction.type === 'expense' ? 'Gasto' : 'Receita';
+                    
+                    if (businessMode) {
+                        csvContent += `"${date}","${transaction.description}","${currency.symbol} ${amount}","${transaction.category}","${type}","${transaction.supplier || ''}","${transaction.costCenter || ''}","${transaction.project || ''}","${transaction.invoiceNumber || ''}"\n`;
+                    } else {
+                        csvContent += `"${date}","${transaction.description}","${currency.symbol} ${amount}","${transaction.category}","${type}"\n`;
+                    }
+                });
+                
+                // Create and download file
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', `financeiro_${businessMode ? 'empresa' : 'pessoal'}_${new Date().toISOString().split('T')[0]}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showToast(`✅ Arquivo CSV baixado com sucesso!${businessMode ? '\nPerfeito para enviar ao contador.' : ''}`);
+                
+            } catch (error) {
+                console.error('Erro ao exportar dados:', error);
+                showToast('❌ Não foi possível exportar os dados');
+            }
+        }
+
+        function importData() {
+            showToast('📊 Em Desenvolvimento\n\nEm breve você poderá:\n• Importar arquivos CSV\n• Restaurar backups\n• Sincronizar dados');
+        }
+
+        function clearAllData() {
+            if (confirm('🗑️ Limpar Todos os Dados\n\nEsta ação irá apagar todas as suas transações e configurações. Esta ação não pode ser desfeita.\n\nTem certeza que deseja continuar?')) {
+                try {
+                    // Clear specific data
+                    const keysToRemove = ['monthlyIncome', 'totalExpenses', 'totalIncome', 'transactions'];
+                    keysToRemove.forEach(key => {
+                        localStorage.removeItem(key);
+                    });
+                    
+                    // Reset values
+                    monthlyIncome = 0;
+                    totalExpenses = 0;
+                    updateBalanceDisplay();
+                    
+                    showToast('✅ Todos os dados foram limpos com sucesso!');
+                } catch (error) {
+                    console.error('Erro ao limpar dados:', error);
+                    showToast('❌ Não foi possível limpar os dados');
+                }
+            }
+        }
+
+        // Support Functions
+        function openHelp() {
+            showToast('❓ Central de Ajuda\n\nEm breve:\n• Perguntas frequentes\n• Tutoriais em vídeo\n• Guias passo a passo\n• Dicas de uso');
+        }
+
+        function reportBug() {
+            showToast('🐛 Reportar Problema\n\nEm breve você poderá:\n• Relatar bugs\n• Sugerir melhorias\n• Enviar feedback\n• Contato direto com suporte');
+        }
+
+        function rateApp() {
+            showToast('⭐ Avaliar App\n\nObrigado pelo interesse!\n\nEm breve estará disponível:\n• Avaliação na loja\n• Compartilhar com amigos\n• Deixar comentários');
         }
 
         // Load saved theme
@@ -923,9 +1566,35 @@
         function loadSavedData() {
             const savedIncome = localStorage.getItem('monthlyIncome');
             const savedExpenses = localStorage.getItem('totalExpenses');
+            const savedNotifications = localStorage.getItem('notificationsEnabled');
+            const savedBusinessMode = localStorage.getItem('businessMode');
+            const savedCurrency = localStorage.getItem('selectedCurrency');
             
             if (savedIncome) monthlyIncome = parseFloat(savedIncome);
             if (savedExpenses) totalExpenses = parseFloat(savedExpenses);
+            if (savedNotifications !== null) {
+                notificationsEnabled = JSON.parse(savedNotifications);
+                document.getElementById('notifications-toggle').checked = notificationsEnabled;
+            }
+            if (savedBusinessMode !== null) {
+                businessMode = JSON.parse(savedBusinessMode);
+                document.getElementById('business-toggle').checked = businessMode;
+                // Update descriptions
+                const desc = document.getElementById('business-mode-desc');
+                const exportDesc = document.getElementById('export-desc');
+                if (businessMode) {
+                    desc.textContent = 'Categorias e funcionalidades empresariais ativas';
+                    exportDesc.textContent = 'Gerar planilha CSV para contador/auditoria';
+                } else {
+                    desc.textContent = 'Ativar funcionalidades para empresas e negócios';
+                    exportDesc.textContent = 'Fazer backup das suas informações';
+                }
+            }
+            if (savedCurrency) {
+                selectedCurrency = savedCurrency;
+                const currency = currencies[selectedCurrency];
+                document.getElementById('currency-desc').textContent = `${currency.name} (${currency.symbol})`;
+            }
             
             updateBalanceDisplay();
         }
@@ -943,6 +1612,9 @@
                     }
                 });
             });
+            
+            // Sync dark mode toggle
+            document.getElementById('darkmode-toggle').checked = isDarkMode;
 
             // Add keyboard navigation
             document.addEventListener('keydown', (e) => {
