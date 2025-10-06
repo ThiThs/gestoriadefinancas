@@ -1607,6 +1607,9 @@
                         localStorage.removeItem(key);
                     });
                     
+                    // Mark that data has been intentionally cleared
+                    localStorage.setItem('dataCleared', 'true');
+                    
                     // Reset global variables
                     monthlyIncome = 0;
                     totalExpenses = 0;

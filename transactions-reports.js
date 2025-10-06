@@ -43,7 +43,16 @@ const categoryIcons = {
 
 function loadTransactions() {
     const saved = localStorage.getItem('transactions');
-    transactions = saved ? JSON.parse(saved) : getSampleTransactions();
+    const isDataCleared = localStorage.getItem('dataCleared');
+    
+    // Se os dados foram limpos intencionalmente pelo usuário, não carregar dados de exemplo
+    if (isDataCleared === 'true') {
+        transactions = [];
+    } else {
+        // Se nunca salvou nada e nunca limpou, carregar dados de exemplo na primeira vez
+        transactions = saved ? JSON.parse(saved) : getSampleTransactions();
+    }
+    
     filteredTransactions = [...transactions];
     renderTransactions();
     updateTotals();
@@ -181,6 +190,10 @@ function addTransaction(transactionData) {
     };
     
     transactions.unshift(newTransaction);
+    
+    // Remove a flag de dados limpos quando o usuário adiciona nova transação
+    localStorage.removeItem('dataCleared');
+    
     saveTransactions();
     loadTransactions();
     showToast(`✅ Transação "${newTransaction.description}" adicionada!`);
