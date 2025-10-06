@@ -628,6 +628,88 @@
         body.dark-mode .card:hover {
             box-shadow: 0 4px 16px rgba(0,0,0,0.4);
         }
+        
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+        
+        .loading-logo {
+            margin-bottom: 40px;
+        }
+        
+        .logo-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+            animation: pulse 2s infinite;
+        }
+        
+        .logo-text {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+        
+        .loading-message {
+            font-size: 18px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+        
+        .loading-author {
+            font-size: 16px;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+        
+        .loading-version {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .logo-icon {
+                font-size: 60px;
+            }
+            
+            .logo-text {
+                font-size: 24px;
+            }
+            
+            .loading-message {
+                font-size: 16px;
+            }
+        }
 
         /* Theme Toggle */
         .theme-toggle {
@@ -1168,10 +1250,286 @@
             font-size: 16px;
             opacity: 0.7;
         }
+        
+        /* Transaction Tabs */
+        .transaction-tabs {
+            display: flex;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E0E0E0;
+            position: sticky;
+            top: 68px;
+            z-index: 40;
+        }
+        
+        body.dark-mode .transaction-tabs {
+            background: #1C1C1C;
+            border-bottom: 1px solid #2A2A2A;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-button.active {
+            color: #2E7D32;
+            border-bottom-color: #2E7D32;
+        }
+        
+        body.dark-mode .tab-button {
+            color: #B0B0B0;
+        }
+        
+        body.dark-mode .tab-button.active {
+            color: #4CAF50;
+            border-bottom-color: #4CAF50;
+        }
+        
+        .transaction-tab-content {
+            display: none;
+        }
+        
+        .transaction-tab-content.active {
+            display: block;
+        }
+        
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #2E7D32;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(46, 125, 50, 0.05);
+            margin-bottom: 24px;
+        }
+        
+        .upload-area:hover {
+            border-color: #1B5E20;
+            background: rgba(46, 125, 50, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        body.dark-mode .upload-area {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+        
+        body.dark-mode .upload-area:hover {
+            border-color: #66BB6A;
+            background: rgba(76, 175, 80, 0.2);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .upload-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2E7D32;
+        }
+        
+        body.dark-mode .upload-title {
+            color: #4CAF50;
+        }
+        
+        .upload-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        body.dark-mode .upload-subtitle {
+            color: #B0B0B0;
+        }
+        
+        .upload-button {
+            display: inline-block;
+            background: #2E7D32;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-button:hover {
+            background: #1B5E20;
+            transform: scale(1.05);
+        }
+        
+        /* AI Analysis Styles */
+        .ai-loading {
+            text-align: center;
+            padding: 30px;
+            background: rgba(33, 150, 243, 0.05);
+            border-radius: 12px;
+            border: 1px solid #2196F3;
+        }
+        
+        .ai-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #E3F2FD;
+            border-top: 4px solid #2196F3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        
+        .ai-status {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2196F3;
+            margin-bottom: 8px;
+        }
+        
+        .ai-substatus {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .ai-result {
+            background: rgba(76, 175, 80, 0.05);
+            border: 1px solid #4CAF50;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+        }
+        
+        .ai-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .extracted-info {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        body.dark-mode .extracted-info {
+            background: #2A2A2A;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        body.dark-mode .info-item {
+            border-bottom-color: #404040;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        body.dark-mode .info-label {
+            color: #B0B0B0;
+        }
+        
+        .info-value {
+            font-weight: 600;
+            color: #2E7D32;
+        }
+        
+        body.dark-mode .info-value {
+            color: #4CAF50;
+        }
+        
+        .transaction-type-selector {
+            text-align: center;
+        }
+        
+        .selector-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        
+        body.dark-mode .selector-title {
+            color: #FFFFFF;
+        }
+        
+        .type-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .type-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .expense-btn {
+            background: #F44336;
+            color: white;
+        }
+        
+        .expense-btn:hover {
+            background: #D32F2F;
+            transform: scale(1.05);
+        }
+        
+        .income-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .income-btn:hover {
+            background: #388E3C;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
-    <div class="app-container">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <div class="logo-icon">💰</div>
+                <div class="logo-text">Payment Management</div>
+            </div>
+            <div class="loading-spinner"></div>
+            <div class="loading-message">App em desenvolvimento</div>
+            <div class="loading-author">Ideia de <strong>Thiago Silva</strong></div>
+            <div class="loading-version">v1.0 - Sistema de Gestão Financeira</div>
+        </div>
+    </div>
+    
+    <div class="app-container" id="main-app" style="display: none;">
         <!-- Header -->
         <div class="header">
             <h1 id="header-title">Início</h1>
@@ -1228,26 +1586,59 @@
 
             <!-- Transactions Screen -->
             <div id="transactions-screen" class="screen">
-                <!-- Search Bar -->
-                <div class="search-container">
-                    <div class="search-bar">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="transaction-search" placeholder="Buscar transações..." oninput="filterTransactions()">
+                <!-- Transaction Tabs -->
+                <div class="transaction-tabs">
+                    <button class="tab-button active" onclick="switchTransactionTab('list')">📋 Lista</button>
+                    <button class="tab-button" onclick="switchTransactionTab('receipts')">📄 Comprovantes</button>
+                </div>
+                
+                <!-- List Tab -->
+                <div id="list-tab" class="transaction-tab-content active">
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <div class="search-bar">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="transaction-search" placeholder="Buscar transações..." oninput="filterTransactions()">
+                        </div>
+                    </div>
+
+                    <!-- Transactions Content -->
+                    <div style="padding: 0 16px;">
+                        <!-- Transactions List -->
+                        <div id="transactions-list" class="transactions-list">
+                            <!-- Transactions will be rendered here -->
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="empty-transactions" class="empty-state" style="display: none;">
+                            <div class="empty-icon">📄</div>
+                            <h3 class="empty-title">Nenhuma transação encontrada</h3>
+                            <p class="empty-text">Adicione sua primeira transação</p>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Transactions Content -->
-                <div style="padding: 0 16px;">
-                    <!-- Transactions List -->
-                    <div id="transactions-list" class="transactions-list">
-                        <!-- Transactions will be rendered here -->
-                    </div>
-
-                    <!-- Empty State -->
-                    <div id="empty-transactions" class="empty-state" style="display: none;">
-                        <div class="empty-icon">📄</div>
-                        <h3 class="empty-title">Nenhuma transação encontrada</h3>
-                        <p class="empty-text">Adicione sua primeira transação</p>
+                
+                <!-- Receipts Tab -->
+                <div id="receipts-tab" class="transaction-tab-content">
+                    <div style="padding: 16px;">
+                        <!-- Upload Area -->
+                        <div class="upload-area" onclick="document.getElementById('receipt-upload').click()">
+                            <div class="upload-icon">📷</div>
+                            <div class="upload-title">Escaneie seu Comprovante</div>
+                            <div class="upload-subtitle">A IA irá extrair o valor automaticamente</div>
+                            <div class="upload-button">Tirar Foto ou Enviar Arquivo</div>
+                            <input type="file" id="receipt-upload" accept="image/*" capture="camera" style="display: none;" onchange="handleReceiptUpload(event)">
+                        </div>
+                        
+                        <!-- AI Analysis Results -->
+                        <div id="ai-analysis" style="display: none;">
+                            <!-- Analysis results will appear here -->
+                        </div>
+                        
+                        <!-- Processed Receipts -->
+                        <div id="processed-receipts">
+                            <!-- Processed receipts will be listed here -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2061,6 +2452,11 @@
 
         // Initialize app
         function initializeApp() {
+            // Show loading screen for 2.5 seconds
+            setTimeout(() => {
+                hideLoadingScreen();
+            }, 2500);
+            
             loadTheme();
             loadSavedData();
             
@@ -2098,7 +2494,25 @@
             }, 100);
 
             console.log('💰 Payment Management App inicializado!');
-            showToast('🎉 Payment Management v1.0\n\nSistema completo de gestão financeira\n🏢 Modo Empresarial • 👤 Modo Pessoal\n📊 Relatórios • 💰 Investimentos');
+        }
+        
+        // Hide loading screen
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainApp = document.getElementById('main-app');
+            
+            // Fade out loading screen
+            loadingScreen.style.opacity = '0';
+            
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                mainApp.style.display = 'flex';
+                
+                // Show welcome toast after app loads
+                setTimeout(() => {
+                    showToast('🎉 Payment Management v1.0\n\nSistema completo de gestão financeira\n🏢 Modo Empresarial • 👤 Modo Pessoal\n📊 Relatórios • 💰 Investimentos');
+                }, 500);
+            }, 500);
         }
 
         // Investment Modal Functions
@@ -2165,6 +2579,121 @@
             showToast(`🗑️ Investimento "${investment.description}" excluído!`);
         }
 
+        // Transaction tabs functions
+        function switchTransactionTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.transaction-tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Activate selected tab
+            document.querySelector(`[onclick="switchTransactionTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+        
+        // Receipt upload handler
+        function handleReceiptUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Show loading state
+            showAIAnalysis('loading');
+            
+            // Simulate AI processing (2-3 seconds)
+            setTimeout(() => {
+                const mockAnalysis = simulateAIAnalysis(file.name);
+                showAIAnalysis('result', mockAnalysis);
+            }, 2500);
+        }
+        
+        // Simulate AI analysis
+        function simulateAIAnalysis(fileName) {
+            // Mock AI results based on common receipt patterns
+            const mockResults = [
+                { amount: 45.80, description: 'Supermercado ABC', category: 'Alimentação' },
+                { amount: 120.50, description: 'Posto de Combustível', category: 'Transporte' },
+                { amount: 89.90, description: 'Restaurante XYZ', category: 'Alimentação' },
+                { amount: 250.00, description: 'Farmácia Central', category: 'Saúde' },
+                { amount: 75.30, description: 'Loja de Roupas', category: 'Roupas' }
+            ];
+            
+            return mockResults[Math.floor(Math.random() * mockResults.length)];
+        }
+        
+        // Show AI analysis results
+        function showAIAnalysis(state, data) {
+            const analysisDiv = document.getElementById('ai-analysis');
+            analysisDiv.style.display = 'block';
+            
+            if (state === 'loading') {
+                analysisDiv.innerHTML = `
+                    <div class="ai-loading">
+                        <div class="ai-spinner"></div>
+                        <div class="ai-status">🤖 IA analisando comprovante...</div>
+                        <div class="ai-substatus">Extraindo valor, descrição e categoria</div>
+                    </div>
+                `;
+            } else if (state === 'result') {
+                analysisDiv.innerHTML = `
+                    <div class="ai-result">
+                        <div class="ai-title">✨ Análise Concluída!</div>
+                        
+                        <div class="extracted-info">
+                            <div class="info-item">
+                                <span class="info-label">Valor Detectado:</span>
+                                <span class="info-value">${formatCurrency(data.amount)}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Descrição:</span>
+                                <span class="info-value">${data.description}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Categoria Sugerida:</span>
+                                <span class="info-value">${data.category}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="transaction-type-selector">
+                            <div class="selector-title">Este é um gasto ou entrada?</div>
+                            <div class="type-buttons">
+                                <button class="type-btn expense-btn" onclick="confirmAITransaction('expense', '${data.description}', ${data.amount}, '${data.category}')">
+                                    💸 Gasto
+                                </button>
+                                <button class="type-btn income-btn" onclick="confirmAITransaction('income', '${data.description}', ${data.amount}, '${data.category}')">
+                                    💰 Entrada
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        // Confirm AI transaction
+        function confirmAITransaction(type, description, amount, category) {
+            const transactionData = {
+                description,
+                amount,
+                type,
+                category,
+                supplier: '',
+                costCenter: '',
+                project: '',
+                invoiceNumber: ''
+            };
+            
+            // Add transaction using existing function
+            if (typeof addTransaction === 'function') {
+                addTransaction(transactionData);
+            }
+            
+            // Hide analysis and show success
+            document.getElementById('ai-analysis').style.display = 'none';
+            showToast(`✨ Comprovante processado com IA!\n${type === 'expense' ? '💸' : '💰'} ${description} - ${formatCurrency(amount)}`);
+            
+            // Reset upload
+            document.getElementById('receipt-upload').value = '';
+        }
+        
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', initializeApp);
 
