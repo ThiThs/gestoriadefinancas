@@ -1655,6 +1655,13 @@
             if (screen) {
                 screen.classList.add('active');
                 
+                // Initialize specific screens
+                if (tabName === 'transactions' && typeof initializeTransactions === 'function') {
+                    initializeTransactions();
+                } else if (tabName === 'reports' && typeof initializeReports === 'function') {
+                    initializeReports();
+                }
+                
                 // Add fade-in animation to cards
                 setTimeout(() => {
                     screen.querySelectorAll('.card').forEach((card, index) => {
@@ -1880,5 +1887,6 @@
             // Add responsive handling if needed
         });
     </script>
+    <script src="transactions-reports.js"></script>
 </body>
 </html>
