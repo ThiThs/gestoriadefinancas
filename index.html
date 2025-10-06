@@ -838,8 +838,9 @@
             padding: 16px;
             border-bottom: 1px solid #E0E0E0;
             position: sticky;
-            top: 68px;
+            top: 0;
             z-index: 50;
+            margin-bottom: 16px;
         }
 
         body.dark-mode .search-container {
@@ -888,7 +889,7 @@
         }
 
         .transactions-list {
-            padding: 16px;
+            padding: 0;
             padding-bottom: 100px;
         }
 
@@ -1163,16 +1164,19 @@
                     </div>
                 </div>
 
-                <!-- Transactions List -->
-                <div id="transactions-list" class="transactions-list">
-                    <!-- Transactions will be rendered here -->
-                </div>
+                <!-- Transactions Content -->
+                <div style="padding: 0 16px;">
+                    <!-- Transactions List -->
+                    <div id="transactions-list" class="transactions-list">
+                        <!-- Transactions will be rendered here -->
+                    </div>
 
-                <!-- Empty State -->
-                <div id="empty-transactions" class="empty-state" style="display: none;">
-                    <div class="empty-icon">📄</div>
-                    <h3 class="empty-title">Nenhuma transação encontrada</h3>
-                    <p class="empty-text">Adicione sua primeira transação</p>
+                    <!-- Empty State -->
+                    <div id="empty-transactions" class="empty-state" style="display: none;">
+                        <div class="empty-icon">📄</div>
+                        <h3 class="empty-title">Nenhuma transação encontrada</h3>
+                        <p class="empty-text">Adicione sua primeira transação</p>
+                    </div>
                 </div>
             </div>
 
@@ -1603,10 +1607,30 @@
                         localStorage.removeItem(key);
                     });
                     
-                    // Reset values
+                    // Reset global variables
                     monthlyIncome = 0;
                     totalExpenses = 0;
+                    
+                    // Reset transactions arrays if they exist
+                    if (typeof transactions !== 'undefined') {
+                        transactions = [];
+                        filteredTransactions = [];
+                    }
+                    
+                    // Update all displays
                     updateBalanceDisplay();
+                    
+                    // Update chart on home screen
+                    if (typeof updateHomeScreenChart === 'function') {
+                        updateHomeScreenChart();
+                    }
+                    
+                    // If we're on transactions screen, refresh the list
+                    if (document.getElementById('transactions-screen').classList.contains('active')) {
+                        if (typeof renderTransactions === 'function') {
+                            renderTransactions();
+                        }
+                    }
                     
                     showToast('✅ Todos os dados foram limpos com sucesso!');
                 } catch (error) {
