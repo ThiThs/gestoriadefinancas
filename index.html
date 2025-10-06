@@ -1195,6 +1195,55 @@
                 </div>
             </div>
 
+            <!-- Investments Screen -->
+            <div id="investments-screen" class="screen">
+                <!-- Suggested Investment -->
+                <div class="card fade-in">
+                    <h3 class="card-title">💡 Sugestão Inteligente</h3>
+                    <div id="investment-suggestion">
+                        <!-- Investment suggestion will be rendered here -->
+                    </div>
+                </div>
+                
+                <!-- Your Investments -->
+                <div class="card fade-in">
+                    <h3 class="card-title">💼 Seus Investimentos</h3>
+                    <div id="investments-summary">
+                        <!-- Investment summary will be rendered here -->
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <button class="modal-button primary" onclick="openAddInvestmentModal()" style="width: 100%;">
+                            ➕ Adicionar Investimento
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Investment Categories -->
+                <div class="card fade-in">
+                    <h3 class="card-title">📈 Por Categoria</h3>
+                    <div id="investment-categories">
+                        <!-- Investment categories will be rendered here -->
+                    </div>
+                </div>
+                
+                <!-- Progress Tracking -->
+                <div class="card fade-in">
+                    <h3 class="card-title">🎯 Progresso</h3>
+                    <div id="investment-progress">
+                        <!-- Investment progress will be rendered here -->
+                    </div>
+                </div>
+                
+                <!-- Investment Goals -->
+                <div class="card fade-in">
+                    <h3 class="card-title">🎆 Metas e Objetivos</h3>
+                    <div id="investment-goals">
+                        <!-- Investment goals will be rendered here -->
+                    </div>
+                </div>
+            </div>
+            
             <!-- Settings Screen -->
             <div id="settings-screen" class="screen">
                 <!-- App Info Card -->
@@ -1389,6 +1438,10 @@
                 <span class="icon">📊</span>
                 <span class="label">Relatórios</span>
             </div>
+            <div class="nav-item" onclick="switchTab('investments')">
+                <span class="icon">💰</span>
+                <span class="label">Investimentos</span>
+            </div>
             <div class="nav-item" onclick="switchTab('settings')">
                 <span class="icon">⚙️</span>
                 <span class="label">Config</span>
@@ -1456,6 +1509,61 @@
         </div>
     </div>
 
+    <!-- Add Investment Modal -->
+    <div class="modal-overlay" id="investment-modal">
+        <div class="modal" style="max-height: 90vh; max-width: 500px;">
+            <div class="modal-title">Novo Investimento</div>
+            
+            <div class="input-group">
+                <label class="input-label">Descrição *</label>
+                <input type="text" class="input-field" id="investment-description" placeholder="Ex: Tesouro Direto, Ações...">
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Valor Investido *</label>
+                <input type="number" class="input-field" id="investment-amount" placeholder="0,00" step="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Categoria</label>
+                <select class="input-field" id="investment-category">
+                    <option value="Renda Fixa">Renda Fixa</option>
+                    <option value="Renda Variável">Renda Variável</option>
+                    <option value="Fundos de Investimento">Fundos de Investimento</option>
+                    <option value="Criptomoedas">Criptomoedas</option>
+                    <option value="Imóveis">Imóveis</option>
+                    <option value="Reserva de Emergência">Reserva de Emergência</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Objetivo (Opcional)</label>
+                <select class="input-field" id="investment-goal">
+                    <option value="">Selecione um objetivo...</option>
+                    <option value="Reserva de Emergência">Reserva de Emergência</option>
+                    <option value="Aposentadoria">Aposentadoria</option>
+                    <option value="Casa Própria">Casa Própria</option>
+                    <option value="Viagem">Viagem</option>
+                    <option value="Educação">Educação</option>
+                    <option value="Negócio">Expansão do Negócio</option>
+                    <option value="Equipamentos">Equipamentos</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Data do Investimento</label>
+                <input type="date" class="input-field" id="investment-date">
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="modal-button secondary" onclick="closeInvestmentModal()">Cancelar</button>
+                <button class="modal-button primary" onclick="saveInvestment()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let isDarkMode = false;
         let monthlyIncome = 0;
@@ -1463,6 +1571,7 @@
         let notificationsEnabled = true;
         let businessMode = false;
         let selectedCurrency = 'BRL';
+        let investments = [];
         
         const currencies = {
             'BRL': { name: 'Real Brasileiro', symbol: 'R$' },
@@ -1602,7 +1711,7 @@
             if (confirm('🗑️ Limpar Todos os Dados\n\nEsta ação irá apagar todas as suas transações e configurações. Esta ação não pode ser desfeita.\n\nTem certeza que deseja continuar?')) {
                 try {
                     // Clear specific data
-                    const keysToRemove = ['monthlyIncome', 'totalExpenses', 'totalIncome', 'transactions'];
+                    const keysToRemove = ['monthlyIncome', 'totalExpenses', 'totalIncome', 'transactions', 'investments'];
                     keysToRemove.forEach(key => {
                         localStorage.removeItem(key);
                     });
@@ -1615,6 +1724,11 @@
                     if (typeof transactions !== 'undefined') {
                         transactions = [];
                         filteredTransactions = [];
+                    }
+                    
+                    // Reset investments array if it exists
+                    if (typeof investments !== 'undefined') {
+                        investments = [];
                     }
                     
                     // Update all displays
@@ -1684,6 +1798,8 @@
                     initializeTransactions();
                 } else if (tabName === 'reports' && typeof initializeReports === 'function') {
                     initializeReports();
+                } else if (tabName === 'investments' && typeof initializeInvestments === 'function') {
+                    initializeInvestments();
                 }
                 
                 // Add fade-in animation to cards
@@ -1711,6 +1827,7 @@
                 'home': 'Início',
                 'transactions': 'Transações', 
                 'reports': 'Relatórios',
+                'investments': 'Investimentos',
                 'settings': 'Configurações'
             };
             document.getElementById('header-title').textContent = titles[tabName] || 'Payment Management';
@@ -1836,6 +1953,7 @@
             const savedNotifications = localStorage.getItem('notificationsEnabled');
             const savedBusinessMode = localStorage.getItem('businessMode');
             const savedCurrency = localStorage.getItem('selectedCurrency');
+            const savedInvestments = localStorage.getItem('investments');
             
             if (savedIncome) monthlyIncome = parseFloat(savedIncome);
             if (savedExpenses) totalExpenses = parseFloat(savedExpenses);
@@ -1861,6 +1979,9 @@
                 selectedCurrency = savedCurrency;
                 const currency = currencies[selectedCurrency];
                 document.getElementById('currency-desc').textContent = `${currency.name} (${currency.symbol})`;
+            }
+            if (savedInvestments) {
+                investments = JSON.parse(savedInvestments);
             }
             
             updateBalanceDisplay();
@@ -1903,6 +2024,70 @@
             showToast('💰 Bem-vindo ao Payment Management!');
         }
 
+        // Investment Modal Functions
+        function openAddInvestmentModal() {
+            document.getElementById('investment-modal').classList.add('active');
+            document.getElementById('investment-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('investment-description').focus();
+        }
+
+        function closeInvestmentModal() {
+            document.getElementById('investment-modal').classList.remove('active');
+            // Clear form
+            document.getElementById('investment-description').value = '';
+            document.getElementById('investment-amount').value = '';
+            document.getElementById('investment-category').value = 'Renda Fixa';
+            document.getElementById('investment-goal').value = '';
+        }
+
+        function saveInvestment() {
+            const description = document.getElementById('investment-description').value.trim();
+            const amount = parseFloat(document.getElementById('investment-amount').value);
+            const category = document.getElementById('investment-category').value;
+            const goal = document.getElementById('investment-goal').value;
+            const date = document.getElementById('investment-date').value;
+            
+            if (!description || isNaN(amount) || amount <= 0) {
+                showToast('❌ Preencha todos os campos obrigatórios!');
+                return;
+            }
+            
+            const newInvestment = {
+                id: Date.now().toString(),
+                description,
+                amount,
+                category,
+                goal,
+                date,
+                createdAt: new Date().toISOString()
+            };
+            
+            investments.unshift(newInvestment);
+            saveInvestments();
+            loadInvestmentsScreen();
+            closeInvestmentModal();
+            showToast(`✅ Investimento "${description}" adicionado!`);
+        }
+
+        function saveInvestments() {
+            localStorage.setItem('investments', JSON.stringify(investments));
+        }
+
+        function loadInvestments() {
+            const saved = localStorage.getItem('investments');
+            investments = saved ? JSON.parse(saved) : [];
+        }
+
+        function deleteInvestment(id) {
+            if (!confirm('Tem certeza que deseja excluir este investimento?')) return;
+            
+            const investment = investments.find(i => i.id === id);
+            investments = investments.filter(i => i.id !== id);
+            saveInvestments();
+            loadInvestmentsScreen();
+            showToast(`🗑️ Investimento "${investment.description}" excluído!`);
+        }
+
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', initializeApp);
 
@@ -1912,5 +2097,6 @@
         });
     </script>
     <script src="transactions-reports.js"></script>
+    <script src="investments.js"></script>
 </body>
 </html>
