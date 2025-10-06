@@ -369,6 +369,12 @@ function loadReportsScreen() {
             <h3 class="card-title">🎯 Score Financeiro</h3>
             <div id="financial-score"></div>
         </div>
+        
+        <!-- Improvement Tips -->
+        <div class="card fade-in">
+            <h3 class="card-title">💡 Como Melhorar Suas Finanças</h3>
+            <div id="improvement-tips"></div>
+        </div>
     `;
     
     document.getElementById('reports-screen').innerHTML = reportsHTML;
@@ -425,6 +431,7 @@ function updateReports(period) {
     updateMonthlyTrend();
     updateAdvancedAnalysis(filteredData);
     updateFinancialScore(filteredData);
+    updateImprovementTips(filteredData);
 }
 
 function filterTransactionsByPeriod(period) {
@@ -835,6 +842,184 @@ function formatDate(dateString) {
 // Initialize when switching to reports
 function initializeReports() {
     loadReportsScreen();
+}
+
+// ========== IMPROVEMENT TIPS ==========
+function updateImprovementTips(data) {
+    const tipsElement = document.getElementById('improvement-tips');
+    
+    if (data.length === 0) {
+        tipsElement.innerHTML = `
+            <div style="text-align: center; padding: 30px; color: #9E9E9E;">
+                <div style="font-size: 48px; margin-bottom: 16px;">💡</div>
+                <h3 style="margin-bottom: 8px; color: inherit;">Dicas Personalizadas</h3>
+                <p style="margin: 0;">Adicione algumas transações para receber dicas personalizadas de como melhorar suas finanças.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const totalIncome = data.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const totalExpenses = data.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+    const balance = totalIncome - totalExpenses;
+    
+    // Calcular gastos por categoria
+    const expensesByCategory = {};
+    data.filter(t => t.type === 'expense').forEach(t => {
+        const category = t.category || 'Outros';
+        expensesByCategory[category] = (expensesByCategory[category] || 0) + t.amount;
+    });
+    
+    const topCategory = Object.keys(expensesByCategory).reduce((a, b) => 
+        expensesByCategory[a] > expensesByCategory[b] ? a : b, 'Nenhuma');
+    
+    let tips = [];
+    
+    if (businessMode) {
+        // Dicas empresariais
+        tips = getBusinessTips(totalIncome, totalExpenses, balance, expensesByCategory, topCategory);
+    } else {
+        // Dicas pessoais
+        tips = getPersonalTips(totalIncome, totalExpenses, balance, expensesByCategory, topCategory);
+    }
+    
+    tipsElement.innerHTML = tips.map(tip => `
+        <div style="display: flex; align-items: flex-start; padding: 16px; margin: 12px 0; background: ${tip.color}15; border-left: 4px solid ${tip.color}; border-radius: 8px;">
+            <div style="font-size: 24px; margin-right: 12px; margin-top: 4px;">${tip.icon}</div>
+            <div style="flex: 1;">
+                <div style="font-weight: 600; color: ${tip.color}; margin-bottom: 8px;">${tip.title}</div>
+                <div style="margin-bottom: 8px; line-height: 1.4;">${tip.description}</div>
+                <div style="font-size: 14px; background: rgba(0,0,0,0.05); padding: 8px 12px; border-radius: 6px; font-style: italic;">
+                    🎯 <strong>Ação:</strong> ${tip.action}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function getBusinessTips(totalIncome, totalExpenses, balance, expensesByCategory, topCategory) {
+    const tips = [];
+    const expenseRatio = totalIncome > 0 ? totalExpenses / totalIncome : 0;
+    
+    // Dica de fluxo de caixa
+    if (balance < 0) {
+        tips.push({
+            icon: '🚨',
+            title: 'Fluxo de Caixa Negativo',
+            description: 'Sua empresa está gastando mais do que fatura. Isso pode levar a problemas de liquidez.',
+            action: 'Renegocie prazos com fornecedores, acelere recebimentos e corte custos não essenciais.',
+            color: '#F44336'
+        });
+    }
+    
+    // Dica de reserva de emergência
+    if (balance > 0 && balance < totalExpenses * 3) {
+        tips.push({
+            icon: '🛡️',
+            title: 'Crie uma Reserva de Emergência',
+            description: 'Toda empresa deve ter uma reserva equivalente a 6 meses de gastos operacionais.',
+            action: 'Guarde 20% do lucro mensal em uma conta separada até atingir 6 meses de reserva.',
+            color: '#FF9800'
+        });
+    }
+    
+    // Dica de categoria principal
+    if (topCategory && topCategory !== 'Nenhuma') {
+        const categoryAmount = expensesByCategory[topCategory];
+        const categoryPercent = ((categoryAmount / totalExpenses) * 100).toFixed(0);
+        tips.push({
+            icon: '📊',
+            title: `Otimizar Gastos com ${topCategory}`,
+            description: `${topCategory} representa ${categoryPercent}% dos seus gastos (${formatCurrency(categoryAmount)}). Há oportunidade de economia.`,
+            action: 'Negocie melhores condições, busque fornecedores alternativos ou automatize processos.',
+            color: '#2196F3'
+        });
+    }
+    
+    // Dica de crescimento
+    if (expenseRatio < 0.7) {
+        tips.push({
+            icon: '🚀',
+            title: 'Oportunidade de Investimento',
+            description: 'Sua empresa tem margem saudável. É um bom momento para investir em crescimento.',
+            action: 'Invista em marketing, equipamentos ou contratações para expandir o negócio.',
+            color: '#4CAF50'
+        });
+    }
+    
+    return tips.slice(0, 3); // Máximo 3 dicas
+}
+
+function getPersonalTips(totalIncome, totalExpenses, balance, expensesByCategory, topCategory) {
+    const tips = [];
+    const expenseRatio = totalIncome > 0 ? totalExpenses / totalIncome : 0;
+    
+    // Dica de controle de gastos
+    if (expenseRatio > 0.9) {
+        tips.push({
+            icon: '⚠️',
+            title: 'Controle Seus Gastos',
+            description: `Você está gastando ${(expenseRatio * 100).toFixed(0)}% da sua renda. Isso deixa pouco para emergências e investimentos.`,
+            action: 'Liste todos os gastos, corte supérfluos e estabeleça um orçamento mensal.',
+            color: '#F44336'
+        });
+    }
+    
+    // Dica de reserva de emergência
+    if (balance > 0 && balance < totalExpenses * 3) {
+        tips.push({
+            icon: '💰',
+            title: 'Construa sua Reserva de Emergência',
+            description: 'Uma reserva de 3-6 meses de gastos te protege contra imprevistos.',
+            action: 'Guarde pelo menos 10% da renda mensal em uma poupança até formar sua reserva.',
+            color: '#FF9800'
+        });
+    }
+    
+    // Dica de categoria principal
+    if (topCategory && topCategory !== 'Nenhuma') {
+        const categoryAmount = expensesByCategory[topCategory];
+        const categoryPercent = ((categoryAmount / totalExpenses) * 100).toFixed(0);
+        
+        if (topCategory === 'Alimentação' && categoryPercent > 30) {
+            tips.push({
+                icon: '🍽️',
+                title: 'Economize na Alimentação',
+                description: `Alimentação representa ${categoryPercent}% dos gastos. Cozinhar em casa pode gerar grande economia.`,
+                action: 'Planeje refeições, cozinhe em casa e leve marmita. Reduza deliveries e restaurantes.',
+                color: '#4CAF50'
+            });
+        } else if (topCategory === 'Transporte' && categoryPercent > 25) {
+            tips.push({
+                icon: '🚗',
+                title: 'Otimize Gastos com Transporte',
+                description: `Transporte consome ${categoryPercent}% do orçamento. Considere alternativas mais econômicas.`,
+                action: 'Use transporte público, carona solidária ou bicicleta quando possível.',
+                color: '#2196F3'
+            });
+        } else {
+            tips.push({
+                icon: '📊',
+                title: `Revise Gastos com ${topCategory}`,
+                description: `${topCategory} é sua maior categoria de gasto (${categoryPercent}%). Veja se há como economizar.`,
+                action: 'Analise cada item dessa categoria e procure alternativas mais baratas.',
+                color: '#9C27B0'
+            });
+        }
+    }
+    
+    // Dica de investimento
+    if (expenseRatio < 0.7 && balance > totalExpenses) {
+        tips.push({
+            icon: '💹',
+            title: 'Comece a Investir',
+            description: 'Sua situação financeira permite investimentos. Faça seu dinheiro trabalhar para você.',
+            action: 'Comece com renda fixa (Tesouro Direto, CDB) e depois diversifique gradualmente.',
+            color: '#4CAF50'
+        });
+    }
+    
+    return tips.slice(0, 3); // Máximo 3 dicas
 }
 
 // Initialize when switching to transactions  
